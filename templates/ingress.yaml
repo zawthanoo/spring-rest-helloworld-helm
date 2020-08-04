@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ include "spring-rest-helloworld.fullname" . }}-ingress
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: {{ .Values.appServer.contextPath }}
+        backend:
+          serviceName: {{ include "spring-rest-helloworld.fullname" . }}-service
+          servicePort: 8080      
