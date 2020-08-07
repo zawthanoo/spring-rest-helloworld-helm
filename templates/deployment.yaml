@@ -21,7 +21,10 @@ spec:
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
-        - containerPort: {{ .Values.appServer.port }}
+        {{- range $port := .Values.service.ports }}
+          - name: {{ $port.name }}
+            containerPort: {{ $port.internalport }}
+        {{- end }}
         livenessProbe:
           httpGet:
             path: {{ .Values.livenessProbe.httpGet.path }}
@@ -46,7 +49,7 @@ spec:
         resources:
           {{- toYaml .Values.resources | nindent 12 }}
       imagePullSecrets:
-      - name: muturegistrykey
+      - name: mutu-docker-hub
       volumes:
         - name: {{ include "spring-rest-helloworld.fullname" . }}-config-volume
           configMap:

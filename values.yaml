@@ -1,45 +1,45 @@
 # Default values for spring-rest-helloworld.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+# kubectl create secret docker-registry --dry-run=true mutu-docker-hub --docker-server=cloud.docker.com --docker-username=zawthanoo --docker-password="Sagittarius&7" --docker-email=zawthanoo.1986@gmail.com
 
 replicaCount: 1
 
 image:
-  repository:  zawthanoo/spring-rest-helloworld
-  tag: 0.1.0-9e40b34-15
-  pullPolicy: IfNotPresent
+  repository: zawthanoo/spring-rest-helloworld
+  tag: 0.1.0-fb34acc-16
+  pullPolicy: Always
 
-imagePullSecrets: muturegistrykey
+imagePullSecrets: mutu-docker-hub
 nameOverride: ""
 fullnameOverride: "spring-rest-helloworld"
 
 service:
   type: ClusterIP
-  protocol: TCP
-  port: 8080
-
-appServer:
-  name: tomcat
-  protocol: TCP
-  port: 8080
-  contextPath: /spring-k8s
+  ports:
+    api: 
+     name: api    
+     internalport: 8082
+     externalport: 8082
 
 livenessProbe:
   httpGet:
-    path: /spring-k8s
-    port: 8080
+    path: /myapp
+    port: 8082
   initialDelaySeconds: 10
   periodSeconds: 5
 
 readinessProbe:
   httpGet:
-    path: /spring-k8s
-    port: 8080
+    path: /myapp
+    port: 8082
   initialDelaySeconds: 10
   periodSeconds: 5
 
 ingress:
   enabled: false
+  path: /myapp
+  externalport: 8082
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -67,10 +67,10 @@ resources:
     memory: 1024Mi
 
 volumeMounts:
-  configMountPath: /usr/local/myapp/config/spring-rest-helloworld-config.yml
-  configSubPath: spring-rest-helloworld-config.yml
-  serectMountPath: /usr/local/myapp/config/spring-rest-helloworld-secret.yml
-  serectSubPath: spring-rest-helloworld-secret.yml
+  configMountPath: /usr/local/myapp/config/application-config-override.yaml
+  configSubPath: application-config-override.yaml
+  serectMountPath: /usr/local/myapp/config/application-secret-override.yaml
+  serectSubPath: application-config-override.yaml
 
 nodeSelector: {}
 

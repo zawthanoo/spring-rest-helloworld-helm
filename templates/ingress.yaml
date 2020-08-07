@@ -8,7 +8,7 @@ spec:
   rules:
   - http:
       paths:
-      - path: {{ .Values.appServer.contextPath }}
+      - path: {{ .Values.ingress.path }}
         backend:
           serviceName: {{ include "spring-rest-helloworld.fullname" . }}-service
-          servicePort: 8080      
+          servicePort: {{ .Values.ingress.externalport }}

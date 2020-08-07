@@ -3,12 +3,14 @@ kind: ConfigMap
 metadata:
   name: {{ include "spring-rest-helloworld.fullname" . }}-config
   labels:
-      app: {{ include "spring-rest-helloworld.fullname" . }}-config
+    app: {{ include "spring-rest-helloworld.fullname" . }}
+
 data:
-  {{ .Values.volumeMounts.configSubPath }}: |
+
+  application-config-override.yaml: |
     server:
       servlet:
-        contextPath: /spring-k8s
+        contextPath: /myapp
     target:
-      application: spring-k8s
+      application: spring-rest-helloworld
       description: Testing kubernetes deployment,service,configMap,secret,ingress.
